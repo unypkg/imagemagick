@@ -85,7 +85,8 @@ ldconfig -v
 #unset LD_RUN_PATH
 LDFLAGS="$LDFLAGS $(for libdir in /uny/pkg/*/*/lib; do echo -n "-L$libdir "; done)"
 
-autoreconf -fi
+automake
+autoconf
 
 ./configure \
     --prefix=/uny/pkg/"$pkgname"/"$pkgver" \
