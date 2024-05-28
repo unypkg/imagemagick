@@ -11,7 +11,7 @@ set -vx
 wget -qO- uny.nu/pkg | bash -s buildsys
 
 ### Installing build dependencies
-unyp install libpng libjpeg-turbo libtiff libwebp
+unyp install libpng libjpeg-turbo libtiff libwebp freetype
 
 #pip3_bin=(/uny/pkg/python/*/bin/pip3)
 #"${pip3_bin[0]}" install --upgrade pip
@@ -76,13 +76,7 @@ get_include_paths
 ### Start of individual build script
 
 unset LD_RUN_PATH
-
-for dir in /uny/pkg/*/*/lib; do
-    cat >/etc/ld.so.conf.d/"$(echo "$dir.conf" | sed -e "s|/uny/pkg/||" -e "s|/lib||" -e "s|/|-|")" <<EOFDIR
-$dir
-EOFDIR
-done
-ldconfig -v
+LDFLAGS="$(for libdir in /uny/pkg/*/*/lib; do echo -n "-L$libdir "; done) $LDFLAGS"
 
 ./configure \
     --prefix=/uny/pkg/"$pkgname"/"$pkgver" \
