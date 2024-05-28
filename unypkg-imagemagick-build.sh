@@ -75,7 +75,14 @@ get_include_paths
 ####################################################
 ### Start of individual build script
 
-#unset LD_RUN_PATH
+unset LD_RUN_PATH
+
+for dir in /uny/pkg/*/*/lib; do
+    cat >/etc/ld.so.conf.d/"$(echo "$dir.conf" | sed -e "s|/uny/pkg/||" -e "s|/lib||" -e "s|/|-|")" <<EOFDIR
+$dir
+EOFDIR
+done
+ldconfig -v
 
 ./configure \
     --prefix=/uny/pkg/"$pkgname"/"$pkgver" \
